@@ -4,10 +4,10 @@ STUDIP.wtf = {
         [/<b>(.*?)<\/b>/g, '**$1**'], //bold
         [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
         [/<i>(.*?)<\/i>/g, '%%$1%%'], //italic
-        [/<h1>((?:.|\n)*?)<\/h1>/g, '!!!!$1\n'], //header1
-        [/<h2>((?:.|\n)*?)<\/h2>/g, '!!!$1\n'], //header2
-        [/<h3>((?:.|\n)*?)<\/h3>/g, '!!$1\n'], //header3
-        [/<h4>((?:.|\n)*?)<\/h4>/g, '!$1\n'], //header4    
+        [/<h1>((?:.|\n)*?)<\/h1>/g, '\n!!!!$1\n'], //header1
+        [/<h2>((?:.|\n)*?)<\/h2>/g, '\n!!!$1\n'], //header2
+        [/<h3>((?:.|\n)*?)<\/h3>/g, '\n!!$1\n'], //header3
+        [/<h4>((?:.|\n)*?)<\/h4>/g, '\n!$1\n'], //header4    
         [/<br(.*?)>/ig, '\n'], //newline
     ],
     forward: [
@@ -49,7 +49,7 @@ $(document).ready(function () {
             $(this).addClass('wtf');
             var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', html: STUDIP.wtf.toRealHtml(textarea.html())});
             wtf.css('width', textarea.css('width') - 2);
-            wtf.css('height', textarea.css('height') - 2);
+            //wtf.css('height', textarea.css('height') - 2);
             $(this).after(wtf);
 
             // Add toolbar
