@@ -1,4 +1,5 @@
 STUDIP.wtf = {
+    id: 1,
     replacements: [
         [/<b>(.*?)<\/b>/g, '**$1**'], //bold
         [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
@@ -29,16 +30,20 @@ $(document).ready(function () {
     $('textarea').focus(function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
-            var wtfid = "benis";
+
+            // Generate id
+            var wtfid = "wtf-" + STUDIP.wtf.id;
+            STUDIP.wtf.id++;
             $(this).attr("data-wtf", wtfid);
             $(this).addClass('wtf');
+            console.log(textarea);
             var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', html: STUDIP.wtf.toRealHtml(textarea.html())});
             wtf.css('width', textarea.css('width'));
             wtf.css('height', textarea.css('height'));
             $(this).after(wtf);
 
             // Add toolbar
-            var toolbar = $('<div id="wtf-toolbar">\n\
+            var toolbar = $('<div id="toolbar-' + wtfid + '">\n\
 <a data-wysihtml5-command="bold">bold</a>\n\
 <a data-wysihtml5-command="italic">italic</a>\n\
 <a data-wysihtml5-command="underline">underlined</a>\n\
@@ -60,7 +65,7 @@ $(document).ready(function () {
 
             // Apply the library
             var editor = new wysihtml5.Editor(wtfid, {
-                toolbar: 'wtf-toolbar',
+                toolbar: 'toolbar-' + wtfid,
                 parserRules: wysihtml5ParserRules
             });
 
