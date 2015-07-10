@@ -86,6 +86,7 @@
 .wtf {
   border: #28497c 1px solid;
   overflow-y: scroll;
+  background-color: white;
 }
 #toolbar a {
   border: #28497c 1px solid;

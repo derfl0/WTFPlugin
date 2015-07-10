@@ -1,4 +1,5 @@
 <?php
+
 require 'bootstrap.php';
 
 /**
@@ -9,7 +10,6 @@ require 'bootstrap.php';
  * @author  Florian Bieringer <florian.bieringer@uni-passau.de>
  * @version 0.1a
  */
-
 class WtfPlugin extends StudIPPlugin implements SystemPlugin {
 
     public function __construct() {
@@ -19,29 +19,27 @@ class WtfPlugin extends StudIPPlugin implements SystemPlugin {
         $navigation->setURL(PluginEngine::GetURL($this, array(), 'show'));
         $navigation->setImage(Assets::image_path('blank.gif'));
         Navigation::addItem('/wtfplugin', $navigation);
-    }
 
-    public function initialize () {
-        PageLayout::addScript($this->getPluginURL().'/assets/wysihtml5x-toolbar.min.js');
-        PageLayout::addScript($this->getPluginURL().'/assets/advanced_and_extended.js');
-        PageLayout::addScript($this->getPluginURL().'/assets/application.js');
+        PageLayout::addScript($this->getPluginURL() . '/assets/wysihtml5x-toolbar.min.js');
+        PageLayout::addScript($this->getPluginURL() . '/assets/advanced_and_extended.js');
+        PageLayout::addScript($this->getPluginURL() . '/assets/application.js');
         self::addStylesheet('assets/style.less');
     }
 
-    public function perform($unconsumed_path)
-    {
+    public function initialize() {
+        
+    }
+
+    public function perform($unconsumed_path) {
         $this->setupAutoload();
         $dispatcher = new Trails_Dispatcher(
-            $this->getPluginPath(),
-            rtrim(PluginEngine::getLink($this, array(), null), '/'),
-            'show'
+                $this->getPluginPath(), rtrim(PluginEngine::getLink($this, array(), null), '/'), 'show'
         );
         $dispatcher->plugin = $this;
         $dispatcher->dispatch($unconsumed_path);
     }
 
-    private function setupAutoload()
-    {
+    private function setupAutoload() {
         if (class_exists('StudipAutoloader')) {
             StudipAutoloader::addAutoloadPath(__DIR__ . '/models');
         } else {
@@ -50,4 +48,5 @@ class WtfPlugin extends StudIPPlugin implements SystemPlugin {
             });
         }
     }
+
 }
