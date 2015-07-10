@@ -4,7 +4,7 @@ STUDIP.wtf = {
         [/<b>(.*?)<\/b>/g, '**$1**'], //bold
         [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
         [/<i>(.*?)<\/i>/g, '%%$1%%'], //italic
-        [/<h1>(.*?)<\/h1>/g, '\n!$1\n'], //header
+        [/<h1>(.*?)<\/h1>\W?/g, '\n!$1\n'], //header
         [/<br(.*?)>/ig, '\n'], //newline
     ],
     forward: [
