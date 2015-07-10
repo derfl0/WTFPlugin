@@ -10,8 +10,8 @@ class WtfPlugin extends StudIPPlugin implements SystemPlugin {
 
     public function __construct() {
         parent::__construct();
-        PageLayout::addScript($this->getPluginURL() . '/assets/wysihtml5x-toolbar.min.js');
-        PageLayout::addScript($this->getPluginURL() . '/assets/advanced_and_extended.js');
+        PageLayout::addScript($this->getPluginURL() . '/assets/wysihtml5/dist/wysihtml-toolbar.min.js');
+        PageLayout::addScript($this->getPluginURL() . '/assets/wysihtml5/parser_rules/advanced_and_extended.js');
         PageLayout::addScript($this->getPluginURL() . '/assets/application.js');
         self::addStylesheet('assets/style.less');
     }

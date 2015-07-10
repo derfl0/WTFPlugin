@@ -1,14 +1,15 @@
 STUDIP.wtf = {
     id: 1,
     replacements: [
+        [/<br>/ig, '\n'], //newline
         [/<b>(.*?)<\/b>/g, '**$1**'], //bold
         [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
         [/<i>(.*?)<\/i>/g, '%%$1%%'], //italic
-        [/<h1>((?:.|\n)*?)<\/h1>/g, '\n!!!!$1\n'], //header1
-        [/<h2>((?:.|\n)*?)<\/h2>/g, '\n!!!$1\n'], //header2
-        [/<h3>((?:.|\n)*?)<\/h3>/g, '\n!!$1\n'], //header3
-        [/<h4>((?:.|\n)*?)<\/h4>/g, '\n!$1\n'], //header4    
-        [/<br(.*?)>/ig, '\n'], //newline
+        [/(?:\n?)<h1>((?:.|\n)*?)<\/h1>/g, '\n!!!!$1\n'], //header1
+        [/(?:\n?)<h2>((?:.|\n)*?)<\/h2>/g, '\n!!!$1\n'], //header2
+        [/(?:\n?)<h3>((?:.|\n)*?)<\/h3>/g, '\n!!$1\n'], //header3
+        [/(?:\n?)<h4>((?:.|\n)*?)<\/h4>/g, '\n!$1\n'], //header4  
+        
     ],
     forward: [
         [/\*\*(.*?)\*\*/g, '<b>$1</b>'],
@@ -54,7 +55,7 @@ $(document).ready(function () {
 
             // Add toolbar
             var toolbar = $('<div id="toolbar-' + wtfid + '">\n\
-<a data-wysihtml5-command="bold">bold</a>\n\
+<a data-wysihtml5-command="bold"><b>b</b></a>\n\
 <a data-wysihtml5-command="italic">italic</a>\n\
 <a data-wysihtml5-command="underline">underlined</a>\n\
 <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>\n\
