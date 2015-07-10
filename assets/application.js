@@ -4,10 +4,10 @@ STUDIP.wtf = {
         [/<b>(.*?)<\/b>/g, '**$1**'], //bold
         [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
         [/<i>(.*?)<\/i>/g, '%%$1%%'], //italic
-        [/<h1>(.*?)<\/h1>\W?/g, '\n!!!!$1\n'], //header1
-        [/<h2>(.*?)<\/h2>\W?/g, '\n!!!$1\n'], //header2
-        [/<h3>(.*?)<\/h3>\W?/g, '\n!!$1\n'], //header3
-        [/<h4>(.*?)<\/h4>\W?/g, '\n!$1\n'], //header4    
+        [/<h1>((?:.|\n)*?)<\/h1>/g, '!!!!$1\n'], //header1
+        [/<h2>((?:.|\n)*?)<\/h2>/g, '!!!$1\n'], //header2
+        [/<h3>((?:.|\n)*?)<\/h3>/g, '!!$1\n'], //header3
+        [/<h4>((?:.|\n)*?)<\/h4>/g, '!$1\n'], //header4    
         [/<br(.*?)>/ig, '\n'], //newline
     ],
     forward: [
@@ -99,7 +99,7 @@ $(document).ready(function () {
                 parserRules: wysihtml5ParserRules
             });
 
-            textarea.hide();
+            //textarea.hide();
             wtf.focus();
         }
 
