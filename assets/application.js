@@ -38,9 +38,9 @@ $(document).ready(function () {
     $('textarea').focus(function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
-            
+
             // Remove old toolbar
-            //textarea.closest('.editor_toolbar').remove();
+            textarea.closest('.editor_toolbar').find('.buttons').remove();
 
             // Generate id
             var wtfid = "wtf-" + STUDIP.wtf.id;
@@ -58,31 +58,31 @@ $(document).ready(function () {
 <a data-wysihtml5-command="italic">italic</a>\n\
 <a data-wysihtml5-command="underline">underlined</a>\n\
 <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>\n\
-<a id="swap-'+wtfid+'">WYSIWYG</a>\n\
+<a id="swap-' + wtfid + '">WYSIWYG</a>\n\
 </div>');
             textarea.before(toolbar)
-            
+
             // Bind swapper
-            $('#swap-'+wtfid).click(function(event) {
+            $('#swap-' + wtfid).click(function (event) {
                 event.preventDefault();
                 textarea.toggle();
                 wtf.toggle();
             });
 
             wtf.keyup(function (event) {
-                //wtf.find('*:empty').remove();
-                
+
                 // active markup conversion
-                var converted = STUDIP.wtf.toRealHtml(wtf.html());
-                if (wtf.html() !== converted) {
-                    wtf.html(converted);
-                }
-                
-                // active remove
-                if (event.shiftKey && event.keyCode === 8) {
-                    
-                }
-                
+                /*var converted = STUDIP.wtf.toRealHtml(wtf.html());
+                 if (wtf.html() !== converted) {
+                 wtf.html(converted);
+                 }
+                 
+                 // active remove
+                 if (event.shiftKey && event.keyCode === 8) {
+                 
+                 }
+                 */
+
                 textarea.val(STUDIP.wtf.cover(wtf.html()));
             });
             toolbar.click(function () {
@@ -99,7 +99,7 @@ $(document).ready(function () {
                 parserRules: wysihtml5ParserRules
             });
 
-            //textarea.hide();
+            textarea.hide();
             wtf.focus();
         }
 
