@@ -7,7 +7,7 @@ STUDIP.wtf = {
         [/<h1>(.*?)<\/h1>\W?/g, '\n!!!!$1\n'], //header1
         [/<h2>(.*?)<\/h2>\W?/g, '\n!!!$1\n'], //header2
         [/<h3>(.*?)<\/h3>\W?/g, '\n!!$1\n'], //header3
-        [/<h4>(.*?)<\/h4>\W?/g, '\n!$1\n'], //header4
+        [/<h4>(.*?)<\/h4>\W?/g, '\n!$1\n'], //header4    
         [/<br(.*?)>/ig, '\n'], //newline
     ],
     forward: [
@@ -18,7 +18,7 @@ STUDIP.wtf = {
         [/\!\!\!(.+)/g, '<h2>$1</h2>'],
         [/\!\!(.+)/g, '<h3>$1</h3>'],
         [/\!(.+)/g, '<h4>$1</h4>'],
-        //[/\[img\](.*?)\W/g, '<img src="$1">'],
+        [/\[img\](\S*)/g, '<img contenteditable=true src="$1">'],
     ],
     cover: function (input) {
         $.each(STUDIP.wtf.replacements, function (index, value) {
@@ -38,6 +38,9 @@ $(document).ready(function () {
     $('textarea').focus(function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
+            
+            // Remove old toolbar
+            //textarea.closest('.editor_toolbar').remove();
 
             // Generate id
             var wtfid = "wtf-" + STUDIP.wtf.id;
@@ -45,8 +48,8 @@ $(document).ready(function () {
             $(this).attr("data-wtf", wtfid);
             $(this).addClass('wtf');
             var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', html: STUDIP.wtf.toRealHtml(textarea.html())});
-            wtf.css('width', textarea.css('width'));
-            wtf.css('height', textarea.css('height'));
+            wtf.css('width', textarea.css('width') - 2);
+            wtf.css('height', textarea.css('height') - 2);
             $(this).after(wtf);
 
             // Add toolbar
@@ -55,16 +58,29 @@ $(document).ready(function () {
 <a data-wysihtml5-command="italic">italic</a>\n\
 <a data-wysihtml5-command="underline">underlined</a>\n\
 <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>\n\
+<a id="swap-'+wtfid+'">WYSIWYG</a>\n\
 </div>');
-            wtf.before(toolbar)
+            textarea.before(toolbar)
+            
+            // Bind swapper
+            $('#swap-'+wtfid).click(function(event) {
+                event.preventDefault();
+                textarea.toggle();
+                wtf.toggle();
+            });
 
-            wtf.keyup(function () {
+            wtf.keyup(function (event) {
                 //wtf.find('*:empty').remove();
                 
                 // active markup conversion
                 var converted = STUDIP.wtf.toRealHtml(wtf.html());
                 if (wtf.html() !== converted) {
                     wtf.html(converted);
+                }
+                
+                // active remove
+                if (event.shiftKey && event.keyCode === 8) {
+                    
                 }
                 
                 textarea.val(STUDIP.wtf.cover(wtf.html()));
@@ -83,7 +99,7 @@ $(document).ready(function () {
                 parserRules: wysihtml5ParserRules
             });
 
-            //textarea.hide();
+            textarea.hide();
             wtf.focus();
         }
 
