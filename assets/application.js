@@ -29,29 +29,46 @@ $(document).ready(function () {
     $('textarea').focus(function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
-            $(this).attr("data-wtf", "benis");
+            var wtfid = "benis";
+            $(this).attr("data-wtf", wtfid);
             $(this).addClass('wtf');
-            var wtf = $('<div>', {id: 'mywtf', class: 'wtf', contenteditable: 'true', html: STUDIP.wtf.toRealHtml(textarea.html())});
+            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', html: STUDIP.wtf.toRealHtml(textarea.html())});
             wtf.css('width', textarea.css('width'));
             wtf.css('height', textarea.css('height'));
             $(this).after(wtf);
+
+            // Add toolbar
+            var toolbar = $('<div id="wtf-toolbar">\n\
+<a data-wysihtml5-command="bold">bold</a>\n\
+<a data-wysihtml5-command="italic">italic</a>\n\
+<a data-wysihtml5-command="underline">underlined</a>\n\
+<a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>\n\
+</div>');
+            wtf.before(toolbar)
+
             wtf.keyup(function () {
                 //wtf.find('*:empty').remove();
                 textarea.val(STUDIP.wtf.cover(wtf.html()));
             });
-            $('#toolbar').click(function () {
+            toolbar.click(function () {
                 setTimeout(function () {
                     textarea.val(STUDIP.wtf.cover(wtf.html()));
                 }, 50);
             });
+
+
+
+            // Apply the library
+            var editor = new wysihtml5.Editor(wtfid, {
+                toolbar: 'wtf-toolbar',
+                parserRules: wysihtml5ParserRules
+            });
+
             wtf.focus();
         }
 
     });
 
-    var editor = new wysihtml5.Editor('mywtf', {
-        toolbar: 'toolbar',
-        parserRules: wysihtml5ParserRules
-    });
+
 });
 
