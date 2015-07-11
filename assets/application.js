@@ -75,11 +75,13 @@ STUDIP.wtf = {
     }
 };
 $(document).ready(function () {
-    $('textarea').focus(function () {
+    $('textarea:not(wtf)').focus(function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
+            
             // Remove old toolbar
             textarea.closest('.editor_toolbar').find('.buttons').remove();
+            
             // Generate id
             var wtfid = "wtf-" + STUDIP.wtf.id;
             STUDIP.wtf.id++;
@@ -98,9 +100,6 @@ $(document).ready(function () {
                 },
                 dataType: 'html'
             });
-
-            wtf.css('width', textarea.css('width') - 2);
-            wtf.height(textarea.css('height') - 2);
             
             // Add toolbar
             var toolbar = $('<div>', {class: "wtf-toolbar", id: 'toolbar-' + wtfid});
@@ -109,7 +108,7 @@ $(document).ready(function () {
             STUDIP.wtf.toolbarAdd(toolbar, 'underline', "<u>u</u>");
             STUDIP.wtf.toolbarAdd(toolbar, 'insertUnorderedList', 'Liste');
             STUDIP.wtf.toolbarAdd(toolbar, 'formatBlock', "Ü1", "h1");
-            toolbar.append($('<div>', {id: 'swap-' + wtfid, class: 'wtf-swap active', text: "WYSIWYG"}));
+            toolbar.append($('<div>', {id: 'swap-' + wtfid, class: 'wtf-swap active', text: ""}));
             textarea.before(toolbar);
             
             // Bind swapper

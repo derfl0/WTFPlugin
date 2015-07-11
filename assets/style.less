@@ -32,9 +32,17 @@
             cursor: pointer;
         }
         &.wtf-swap {
+            .icon-before('blue/code.png');
             float:right;
+            padding: 4px;
+            &:hover {
+                .icon-before('white/code.png');
+            }
             &.active {
-                background-color: @base-color-20;
+                .icon-before('blue/guestbook.png');
+                &:hover {
+                .icon-before('white/guestbook.png');
+            }
             }
         }
     }
