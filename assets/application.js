@@ -2,6 +2,9 @@ STUDIP.wtf = {
     id: 1,
     replacements: [
         [/<br>/ig, '\n'], //newline
+        [/<h.>\s*(<img.*?>)\s*<\/h.>/img, '$1 '], //image header fix
+        [/<span.*?>(.*?)<\/span>/img, '$1'], //spanfix
+        [/<img.*?src=["|'](.*?)["|'].*?>/ig, '[img]$1 '], //image
         [/<b>(.*?)<\/b>/g, '**$1**'], //bold
         [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
         [/<i>(.*?)<\/i>/g, '%%$1%%'], //italic
@@ -9,7 +12,7 @@ STUDIP.wtf = {
         [/(?:\n?)<h2>((?:.|\n)*?)<\/h2>/g, '\n!!!$1\n'], //header2
         [/(?:\n?)<h3>((?:.|\n)*?)<\/h3>/g, '\n!!$1\n'], //header3
         [/(?:\n?)<h4>((?:.|\n)*?)<\/h4>/g, '\n!$1\n'], //header4  
-        
+
     ],
     forward: [
         [/\*\*(.*?)\*\*/g, '<b>$1</b>'],
@@ -48,10 +51,10 @@ $(document).ready(function () {
             STUDIP.wtf.id++;
             $(this).attr("data-wtf", wtfid);
             $(this).addClass('wtf');
-            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', html: STUDIP.wtf.toRealHtml(textarea.html())});
-            wtf.css('width', textarea.css('width') - 2);
-            //wtf.css('height', textarea.css('height') - 2);
+            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', height: textarea.height(), html: STUDIP.wtf.toRealHtml(textarea.html())});
             $(this).after(wtf);
+            wtf.css('width', textarea.css('width') - 2);
+            wtf.height(textarea.css('height') - 2);
 
             // Add toolbar
             var toolbar = $('<div id="toolbar-' + wtfid + '">\n\
@@ -71,18 +74,21 @@ $(document).ready(function () {
             });
 
             wtf.keyup(function (event) {
+                wtf.find('*:not(br):empty').remove();
 
                 // active markup conversion
-                /*var converted = STUDIP.wtf.toRealHtml(wtf.html());
-                 if (wtf.html() !== converted) {
-                 wtf.html(converted);
+                /*
+                 if (wtf.html() !== STUDIP.wtf.toRealHtml(wtf.html())) {
+                 var sel = document.selection.createRange();
+                 wtf.html(STUDIP.wtf.toRealHtml(wtf.html()));
+                 sel.restoreCharacterRanges(el, savedSel);
                  }
                  
                  // active remove
                  if (event.shiftKey && event.keyCode === 8) {
                  
-                 }
-                 */
+                 }*/
+
 
                 textarea.val(STUDIP.wtf.cover(wtf.html()));
             });
