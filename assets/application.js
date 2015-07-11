@@ -110,18 +110,24 @@ $(document).ready(function () {
             STUDIP.wtf.toolbarAdd(toolbar, 'underline', "<u>u</u>");
             STUDIP.wtf.toolbarAdd(toolbar, 'insertUnorderedList', 'Liste');
             STUDIP.wtf.toolbarAdd(toolbar, 'formatBlock', "Ü1", "h1");
-            toolbar.append($('<div>', {id: 'swap-' + wtfid, class: 'wtf-swap active', text: ""}));
+            toolbar.append($('<div>', {'data-wtf': wtfid, class: 'preview wtf-swap', text: ""}));
+            toolbar.append($('<div>', {'data-wtf': wtfid, class: 'wysiwyg wtf-swap active', text: ""}));
+            toolbar.append($('<div>', {'data-wtf': wtfid, class: 'cleartext wtf-swap', text: ""}));
             textarea.before(toolbar);
-
-            // Bind swapper
-            $('#swap-' + wtfid).click(function (event) {
-                event.preventDefault();
-                textarea.toggle();
-                $(this).toggleClass('active');
-                wtf.toggle();
-
+            
+            // Add preview
+            var preview = $('<div>', {'data-wtf': wtfid, class: 'preview-window', text: ""});
+            wtf.after(preview);
+            
+            $('div.wtf-swap').click(function(e) {
+                $(this).siblings().removeClass('active');
+                $(this).addClass('active');
+                wtf.hide();
+                textarea.hide();
+                preview.hide();
                 // Reload
-                if ($(this).hasClass('active')) {
+                if ($(this).hasClass('wysiwyg')) {
+                    wtf.show();
                     $.ajax({
                         type: "POST",
                         url: STUDIP.URLHelper.getURL('plugins.php/WtfPlugin/wtf'),
@@ -132,6 +138,25 @@ $(document).ready(function () {
                         dataType: 'html'
                     });
                 }
+                                // Reload
+                if ($(this).hasClass('preview')) {
+                    preview.show();
+                    $.ajax({
+                        type: "POST",
+                        url: STUDIP.URLHelper.getURL('plugins.php/WtfPlugin/preview'),
+                        data: {markup: textarea.val()},
+                        success: function (data) {
+                            preview.html(data);
+                        },
+                        dataType: 'html'
+                    });
+                }
+                
+                                // Reload
+                if ($(this).hasClass('cleartext')) {
+                    textarea.show();
+                }
+                
             });
 
             // typing in wtf

@@ -121,7 +121,10 @@
   float: right;
   padding: 4px;
 }
-.wtf-toolbar div.wtf-swap:before {
+.wtf-toolbar div.wtf-swap.wtf-swap + .wtf-swap {
+  border-right: none;
+}
+.wtf-toolbar div.wtf-swap.cleartext:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -132,12 +135,12 @@
   width: 16px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .wtf-toolbar div.wtf-swap:before {
+  .wtf-toolbar div.wtf-swap.cleartext:before {
     background-image: url("http://localhost/31/public/assets/images//icons/32/blue/code.png");
     background-size: 16px 16px;
   }
 }
-.wtf-toolbar div.wtf-swap:hover:before {
+.wtf-toolbar div.wtf-swap.cleartext:hover:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -148,12 +151,44 @@
   width: 16px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .wtf-toolbar div.wtf-swap:hover:before {
+  .wtf-toolbar div.wtf-swap.cleartext:hover:before {
     background-image: url("http://localhost/31/public/assets/images//icons/32/white/code.png");
     background-size: 16px 16px;
   }
 }
-.wtf-toolbar div.wtf-swap.active:before {
+.wtf-toolbar div.wtf-swap.wysiwyg:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("http://localhost/31/public/assets/images//icons/16/blue/guestbook.png");
+  vertical-align: text-top;
+  width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .wtf-toolbar div.wtf-swap.wysiwyg:before {
+    background-image: url("http://localhost/31/public/assets/images//icons/32/blue/guestbook.png");
+    background-size: 16px 16px;
+  }
+}
+.wtf-toolbar div.wtf-swap.wysiwyg:hover:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("http://localhost/31/public/assets/images//icons/16/white/guestbook.png");
+  vertical-align: text-top;
+  width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .wtf-toolbar div.wtf-swap.wysiwyg:hover:before {
+    background-image: url("http://localhost/31/public/assets/images//icons/32/white/guestbook.png");
+    background-size: 16px 16px;
+  }
+}
+.wtf-toolbar div.wtf-swap.preview:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -164,12 +199,12 @@
   width: 16px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .wtf-toolbar div.wtf-swap.active:before {
+  .wtf-toolbar div.wtf-swap.preview:before {
     background-image: url("http://localhost/31/public/assets/images//icons/32/blue/visibility-visible.png");
     background-size: 16px 16px;
   }
 }
-.wtf-toolbar div.wtf-swap.active:hover:before {
+.wtf-toolbar div.wtf-swap.preview:hover:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -180,8 +215,14 @@
   width: 16px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .wtf-toolbar div.wtf-swap.active:hover:before {
+  .wtf-toolbar div.wtf-swap.preview:hover:before {
     background-image: url("http://localhost/31/public/assets/images//icons/32/white/visibility-visible.png");
     background-size: 16px 16px;
   }
+}
+.wtf-toolbar div.wtf-swap.active {
+  background-color: #d4dbe5;
+}
+.wtf-toolbar div.wtf-swap:hover {
+  background-color: #28497c;
 }

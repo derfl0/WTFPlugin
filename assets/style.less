@@ -32,17 +32,35 @@
             cursor: pointer;
         }
         &.wtf-swap {
-            .icon-before('blue/code.png');
             float:right;
             padding: 4px;
-            &:hover {
-                .icon-before('white/code.png');
+            &.wtf-swap + .wtf-swap {
+                border-right: none;
             }
-            &.active {
+            &.cleartext {
+                .icon-before('blue/code.png');
+                &:hover {
+                    .icon-before('white/code.png');
+                }
+            }
+            &.wysiwyg {
+                .icon-before('blue/guestbook.png');
+                &:hover {
+                    .icon-before('white/guestbook.png');
+                }
+            }
+            &.preview {
                 .icon-before('blue/visibility-visible.png');
                 &:hover {
-                .icon-before('white/visibility-visible.png');
+                    .icon-before('white/visibility-visible.png');
+                }
             }
+            &.active {
+                background-color: @base-color-20;
+            }
+
+            &:hover {
+                background-color: @base-color;
             }
         }
     }

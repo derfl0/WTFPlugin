@@ -26,4 +26,8 @@ class WtfPlugin extends StudIPPlugin implements SystemPlugin {
         echo formatReady(Request::get('markup'));
     }
 
+    public function preview_action() {
+        echo formatReady(Request::get('markup'));
+    }
+
 }
