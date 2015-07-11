@@ -43,6 +43,8 @@ STUDIP.wtf = {
                     case 'BR':
                         result = STUDIP.wtf.cleanline(result);
                         break;
+                    case 'IMG':
+                        result += "[img]" + (this.src)+" ";
                     default:
                         console.log(this);
                         result += STUDIP.wtf.toMarkup($(this));
@@ -75,7 +77,7 @@ STUDIP.wtf = {
     }
 };
 $(document).ready(function () {
-    $('textarea:not(wtf)').focus(function () {
+    $(document).on('focus', "textarea:not(.wtf)", function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
             

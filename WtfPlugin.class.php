@@ -17,7 +17,7 @@ class WtfPlugin extends StudIPPlugin implements SystemPlugin {
     }
 
     public function wtf_action() {
-        $whitelist = array('heading', 'list', 'bold', 'italics', 'underline');
+        $whitelist = array('heading', 'list', 'bold', 'italics', 'underline', 'media');
         foreach (StudipFormat::getStudipMarkups() as $name => $useless) {
             if (!in_array($name, $whitelist)) {
                 StudipFormat::removeStudipMarkup($name);
