@@ -92,17 +92,21 @@
 .wtf:empty:not(:focus):before {
   content: attr(data-ph);
 }
+.wtf-toolbar {
+  margin-bottom: 6px;
+}
 .wtf-toolbar div {
   border: #28497c 1px solid;
-  border-bottom: 0px;
   color: #28497c;
   padding: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
   background-color: white;
   display: inline-block;
   min-width: 20px;
   text-align: center;
 }
-.wtf-toolbar div:nth-child(1n+2) {
+.wtf-toolbar div:nth-child(1n+2):not(.wtf-swap) {
   border-left: none;
 }
 .wtf-toolbar div.wysihtml5-command-active {
@@ -112,4 +116,10 @@
   color: white;
   background-color: #28497c;
   cursor: pointer;
+}
+.wtf-toolbar div.wtf-swap {
+  float: right;
+}
+.wtf-toolbar div.wtf-swap.active {
+  background-color: #d4dbe5;
 }

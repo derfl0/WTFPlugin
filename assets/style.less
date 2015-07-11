@@ -9,17 +9,18 @@
 }
 
 .wtf-toolbar {
-
+    margin-bottom: 6px;
     div {
         border: @base-color 1px solid;
-        border-bottom: 0px;
         color: @base-color;
         padding: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
         background-color: white;
         display: inline-block;
         min-width: 20px;
         text-align: center;
-        &:nth-child(1n+2) {
+        &:nth-child(1n+2):not(.wtf-swap) {
             border-left: none;
         }
         &.wysihtml5-command-active {
@@ -29,6 +30,12 @@
             color: white;
             background-color: @base-color;
             cursor: pointer;
+        }
+        &.wtf-swap {
+            float:right;
+            &.active {
+                background-color: @base-color-20;
+            }
         }
     }
 }
