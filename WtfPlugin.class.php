@@ -15,4 +15,9 @@ class WtfPlugin extends StudIPPlugin implements SystemPlugin {
         PageLayout::addScript($this->getPluginURL() . '/assets/application.js');
         self::addStylesheet('assets/style.less');
     }
+
+    public function wtf_action() {
+        echo formatReady(Request::get('markup'));
+    }
+
 }

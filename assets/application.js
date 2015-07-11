@@ -1,34 +1,59 @@
 STUDIP.wtf = {
     id: 1,
-    replacements: [
-        [/<br>/ig, '\n'], //newline
-        [/&nbsp;/ig, ' '], //space
-        [/<h.>\s*(<img.*?>)\s*<\/h.>/img, '$1 '], //image header fix
-        [/<span.*?>(.*?)<\/span>/img, '$1'], //spanfix
-        [/<img.*?src=["|'](.*?)["|'].*?>/ig, '[img]$1 '], //image
-        [/<b>([^]*?)<\/b>/gm, '**$1**'], //bold
-        [/<u>([^]*?)<\/u>/gm, '__$1__'], //underlined
-        [/<i>([^]*?)<\/i>/gm, '%%$1%%'], //italic
-        [/(?:\n?)<h1>((?:.|\n)*?)<\/h1>/g, '\n!!!!$1\n'], //header1
-        [/(?:\n?)<h2>((?:.|\n)*?)<\/h2>/g, '\n!!!$1\n'], //header2
-        [/(?:\n?)<h3>((?:.|\n)*?)<\/h3>/g, '\n!!$1\n'], //header3
-        [/(?:\n?)<h4>((?:.|\n)*?)<\/h4>/g, '\n!$1\n'], //header4
-        [/<li>(.*?)<\/li>/gi, '- $1\n'], //list  
-        [/<ul>([\s|\S]*?)<\/ul>/gi, '$1'], //list  
-
-    ],
-    forward: [
-        [/- (.*)/ig, "<ul><li>$1</li></ul>"],
-        [/<\/ul>\s*<ul>/ig, ""],
-        [/\*\*(.*?)\*\*/g, '<b>$1</b>'],
-        [/__(.*?)__/g, '<u>$1</u>'],
-        [/%%(.*?)%%/g, '<i>$1</i>'],
-        [/\!\!\!\!(.+)/g, '<h1>$1</h1>'],
-        [/\!\!\!(.+)/g, '<h2>$1</h2>'],
-        [/\!\!(.+)/g, '<h3>$1</h3>'],
-        [/\!(.+)/g, '<h4>$1</h4>'],
-        [/\[img\](\S*)/g, '<img contenteditable=true src="$1">'],
-    ],
+    listDepth: 1,
+    newline: true,
+    cleanline: function (result) {
+        if (!STUDIP.wtf.newline) {
+            result += "\n\
+";
+            STUDIP.wtf.newline = true;
+        }
+        return result;
+    },
+    toMarkup: function (wtf) {
+        var result = "";
+        wtf.contents().each(function () {
+            if (this.nodeType === 1) {
+                switch (this.nodeName) {
+                    case 'B':
+                        result += '**' + STUDIP.wtf.toMarkup($(this)) + "**";
+                        break;
+                    case 'I':
+                        result += '%%' + STUDIP.wtf.toMarkup($(this)) + "%%";
+                        break;
+                    case 'U':
+                        result += '__' + STUDIP.wtf.toMarkup($(this)) + "__";
+                        break;
+                    case 'H1':
+                        result = STUDIP.wtf.cleanline(result);
+                        result += '!!!!' + STUDIP.wtf.toMarkup($(this));
+                        result = STUDIP.wtf.cleanline(result);
+                        break;
+                    case 'UL':
+                        STUDIP.wtf.listDepth++;
+                        result += STUDIP.wtf.toMarkup($(this));
+                        STUDIP.wtf.listDepth--;
+                        break;
+                    case 'LI':
+                        result = STUDIP.wtf.cleanline(result);
+                        result += Array(STUDIP.wtf.listDepth).join("-") + " ";
+                        result += STUDIP.wtf.toMarkup($(this));
+                        result = STUDIP.wtf.cleanline(result);
+                        break;
+                    case 'BR':
+                        result = STUDIP.wtf.cleanline(result);
+                        break;
+                    default:
+                        console.log(this);
+                        result += STUDIP.wtf.toMarkup($(this));
+                }
+            } else {
+                STUDIP.wtf.newline = false;
+                result += this.nodeValue;
+            }
+        });
+        return result;
+    },
     cover: function (input) {
         $.each(STUDIP.wtf.replacements, function (index, value) {
             input = input.replace(value[0], value[1]);
@@ -49,26 +74,34 @@ STUDIP.wtf = {
         toolbar.append(button);
     }
 };
-
 $(document).ready(function () {
     $('textarea').focus(function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
-
             // Remove old toolbar
             textarea.closest('.editor_toolbar').find('.buttons').remove();
-
             // Generate id
             var wtfid = "wtf-" + STUDIP.wtf.id;
             STUDIP.wtf.id++;
             textarea.attr("data-wtf", wtfid);
             textarea.addClass('wtf');
-            var text = STUDIP.wtf.toRealHtml(textarea.val());
-            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', height: textarea.height(), html: text});
+            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', height: textarea.height()});
             textarea.after(wtf);
+            
+            // Let php convert
+            $.ajax({
+                type: "POST",
+                url: STUDIP.URLHelper.getURL('plugins.php/WtfPlugin/wtf'),
+                data: {markup: textarea.val()},
+                success: function (data) {
+                    wtf.html(data);
+                },
+                dataType: 'html'
+            });
+
             wtf.css('width', textarea.css('width') - 2);
             wtf.height(textarea.css('height') - 2);
-
+            
             // Add toolbar
             var toolbar = $('<div>', {class: "wtf-toolbar", id: 'toolbar-' + wtfid});
             STUDIP.wtf.toolbarAdd(toolbar, 'bold', "<b>b</b>");
@@ -78,7 +111,7 @@ $(document).ready(function () {
             STUDIP.wtf.toolbarAdd(toolbar, 'formatBlock', "Ü1", "h1");
             toolbar.append($('<div>', {id: 'swap-' + wtfid, class: 'wtf-swap active', text: "WYSIWYG"}));
             textarea.before(toolbar);
-
+            
             // Bind swapper
             $('#swap-' + wtfid).click(function (event) {
                 event.preventDefault();
@@ -86,52 +119,26 @@ $(document).ready(function () {
                 $(this).toggleClass('active');
                 wtf.toggle();
             });
-
-            // typing in textarea
-            textarea.keyup(function () {
-                wtf.html(STUDIP.wtf.toRealHtml(textarea.val()));
-            });
-
+            
             // typing in wtf
-            wtf.keyup(function (event) {
-                wtf.find('*:not(br):empty').remove();
-
-                // active markup conversion
-                /*
-                 if (wtf.html() !== STUDIP.wtf.toRealHtml(wtf.html())) {
-                 var sel = document.selection.createRange();
-                 wtf.html(STUDIP.wtf.toRealHtml(wtf.html()));
-                 sel.restoreCharacterRanges(el, savedSel);
-                 }
-                 
-                 // active remove
-                 if (event.shiftKey && event.keyCode === 8) {
-                 
-                 }*/
-
-
-                textarea.val(STUDIP.wtf.cover(wtf.html()));
+            wtf.keyup(function () {
+                textarea.val(STUDIP.wtf.toMarkup(wtf));
             });
             toolbar.click(function () {
                 setTimeout(function () {
-                    textarea.val(STUDIP.wtf.cover(wtf.html()));
+                    textarea.val(STUDIP.wtf.toMarkup(wtf));
                 }, 50);
             });
-
-
-
+            
             // Apply the library
             var editor = new wysihtml5.Editor(wtfid, {
                 toolbar: 'toolbar-' + wtfid,
                 parserRules: wysihtml5ParserRules
             });
-
             textarea.hide();
             wtf.focus();
         }
 
     });
-
-
 });
 
