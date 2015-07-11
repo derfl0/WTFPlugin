@@ -159,13 +159,13 @@
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("http://localhost/31/public/assets/images//icons/16/blue/guestbook.png");
+  background-image: url("http://localhost/31/public/assets/images//icons/16/blue/visibility-visible.png");
   vertical-align: text-top;
   width: 16px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .wtf-toolbar div.wtf-swap.active:before {
-    background-image: url("http://localhost/31/public/assets/images//icons/32/blue/guestbook.png");
+    background-image: url("http://localhost/31/public/assets/images//icons/32/blue/visibility-visible.png");
     background-size: 16px 16px;
   }
 }
@@ -175,13 +175,13 @@
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("http://localhost/31/public/assets/images//icons/16/white/guestbook.png");
+  background-image: url("http://localhost/31/public/assets/images//icons/16/white/visibility-visible.png");
   vertical-align: text-top;
   width: 16px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .wtf-toolbar div.wtf-swap.active:hover:before {
-    background-image: url("http://localhost/31/public/assets/images//icons/32/white/guestbook.png");
+    background-image: url("http://localhost/31/public/assets/images//icons/32/white/visibility-visible.png");
     background-size: 16px 16px;
   }
 }
