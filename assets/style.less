@@ -2,10 +2,33 @@
     border: @base-color 1px solid;
     overflow-y: scroll;
     background-color: white;
+    outline: none;
+    &:empty:not(:focus):before{
+        content:attr(data-ph)
+    }
 }
 
-#toolbar {
-    a {
+.wtf-toolbar {
+
+    div {
         border: @base-color 1px solid;
+        border-bottom: 0px;
+        color: @base-color;
+        padding: 2px;
+        background-color: white;
+        display: inline-block;
+        min-width: 20px;
+        text-align: center;
+        &:nth-child(1n+2) {
+            border-left: none;
+        }
+        &.wysihtml5-command-active {
+            background-color: @base-color-20;
+        }
+        &:hover {
+            color: white;
+            background-color: @base-color;
+            cursor: pointer;
+        }
     }
 }

@@ -5,9 +5,9 @@ STUDIP.wtf = {
         [/<h.>\s*(<img.*?>)\s*<\/h.>/img, '$1 '], //image header fix
         [/<span.*?>(.*?)<\/span>/img, '$1'], //spanfix
         [/<img.*?src=["|'](.*?)["|'].*?>/ig, '[img]$1 '], //image
-        [/<b>(.*?)<\/b>/g, '**$1**'], //bold
-        [/<u>(.*?)<\/u>/g, '__$1__'], //underlined
-        [/<i>(.*?)<\/i>/g, '%%$1%%'], //italic
+        [/<b>(.*?)<\/b>/gm, '**$1**'], //bold
+        [/<u>(.*?)<\/u>/gm, '__$1__'], //underlined
+        [/<i>(.*?)<\/i>/gm, '%%$1%%'], //italic
         [/(?:\n?)<h1>((?:.|\n)*?)<\/h1>/g, '\n!!!!$1\n'], //header1
         [/(?:\n?)<h2>((?:.|\n)*?)<\/h2>/g, '\n!!!$1\n'], //header2
         [/(?:\n?)<h3>((?:.|\n)*?)<\/h3>/g, '\n!!$1\n'], //header3
@@ -35,6 +35,13 @@ STUDIP.wtf = {
             input = input.replace(value[0], value[1]);
         });
         return input;
+    },
+    toolbarAdd: function(toolbar, command, text, block) {
+        var button = $('<div>', {'data-wysihtml5-command': command, html: text});
+        if (command === "formatBlock") {
+            button.attr('data-wysihtml5-command-value', block);
+        }
+        toolbar.append(button);
     }
 };
 
@@ -49,22 +56,22 @@ $(document).ready(function () {
             // Generate id
             var wtfid = "wtf-" + STUDIP.wtf.id;
             STUDIP.wtf.id++;
-            $(this).attr("data-wtf", wtfid);
-            $(this).addClass('wtf');
-            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', height: textarea.height(), html: STUDIP.wtf.toRealHtml(textarea.html())});
-            $(this).after(wtf);
+            textarea.attr("data-wtf", wtfid);
+            textarea.addClass('wtf');
+            var text = STUDIP.wtf.toRealHtml(textarea.val());
+            var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', height: textarea.height(), html:text });
+            textarea.after(wtf);
             wtf.css('width', textarea.css('width') - 2);
             wtf.height(textarea.css('height') - 2);
 
             // Add toolbar
-            var toolbar = $('<div id="toolbar-' + wtfid + '">\n\
-<a data-wysihtml5-command="bold"><b>b</b></a>\n\
-<a data-wysihtml5-command="italic">italic</a>\n\
-<a data-wysihtml5-command="underline">underlined</a>\n\
-<a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>\n\
-<a id="swap-' + wtfid + '">WYSIWYG</a>\n\
-</div>');
-            textarea.before(toolbar)
+            var toolbar = $('<div>', {class: "wtf-toolbar", id: 'toolbar-' + wtfid});
+            STUDIP.wtf.toolbarAdd(toolbar, 'bold', "<b>b</b>");
+            STUDIP.wtf.toolbarAdd(toolbar, 'italic', "<i>i</i>");
+            STUDIP.wtf.toolbarAdd(toolbar, 'underline', "<u>u</u>");
+            STUDIP.wtf.toolbarAdd(toolbar, 'formatBlock', "Ü1", "h1");
+            toolbar.append($('<div>', {id: 'swap-' + wtfid, text: "WYSIWYG"}));
+            textarea.before(toolbar);
 
             // Bind swapper
             $('#swap-' + wtfid).click(function (event) {
@@ -72,7 +79,13 @@ $(document).ready(function () {
                 textarea.toggle();
                 wtf.toggle();
             });
-
+            
+            // typing in textarea
+             textarea.keyup(function () {
+                 wtf.html(STUDIP.wtf.toRealHtml(textarea.val()));
+             });
+            
+            // typing in wtf
             wtf.keyup(function (event) {
                 wtf.find('*:not(br):empty').remove();
 
