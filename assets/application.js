@@ -44,7 +44,7 @@ STUDIP.wtf = {
                         result = STUDIP.wtf.cleanline(result);
                         break;
                     case 'IMG':
-                        result += "[img]" + (this.src)+" ";
+                        result += "[img]" + (this.src) + " ";
                     default:
                         console.log(this);
                         result += STUDIP.wtf.toMarkup($(this));
@@ -80,10 +80,10 @@ $(document).ready(function () {
     $(document).on('focus', "textarea:not(.wtf)", function () {
         if (!$(this).hasClass('wtf')) {
             var textarea = $(this);
-            
+
             // Remove old toolbar
             textarea.closest('.editor_toolbar').find('.buttons').remove();
-            
+
             // Generate id
             var wtfid = "wtf-" + STUDIP.wtf.id;
             STUDIP.wtf.id++;
@@ -91,7 +91,7 @@ $(document).ready(function () {
             textarea.addClass('wtf');
             var wtf = $('<div>', {id: wtfid, class: 'wtf', contenteditable: 'true', height: textarea.height()});
             textarea.after(wtf);
-            
+
             // Let php convert
             $.ajax({
                 type: "POST",
@@ -102,7 +102,7 @@ $(document).ready(function () {
                 },
                 dataType: 'html'
             });
-            
+
             // Add toolbar
             var toolbar = $('<div>', {class: "wtf-toolbar", id: 'toolbar-' + wtfid});
             STUDIP.wtf.toolbarAdd(toolbar, 'bold', "<b>b</b>");
@@ -112,15 +112,28 @@ $(document).ready(function () {
             STUDIP.wtf.toolbarAdd(toolbar, 'formatBlock', "Ü1", "h1");
             toolbar.append($('<div>', {id: 'swap-' + wtfid, class: 'wtf-swap active', text: ""}));
             textarea.before(toolbar);
-            
+
             // Bind swapper
             $('#swap-' + wtfid).click(function (event) {
                 event.preventDefault();
                 textarea.toggle();
                 $(this).toggleClass('active');
                 wtf.toggle();
+
+                // Reload
+                if ($(this).hasClass('active')) {
+                    $.ajax({
+                        type: "POST",
+                        url: STUDIP.URLHelper.getURL('plugins.php/WtfPlugin/wtf'),
+                        data: {markup: textarea.val()},
+                        success: function (data) {
+                            wtf.html(data);
+                        },
+                        dataType: 'html'
+                    });
+                }
             });
-            
+
             // typing in wtf
             wtf.keyup(function () {
                 textarea.val(STUDIP.wtf.toMarkup(wtf));
@@ -130,7 +143,7 @@ $(document).ready(function () {
                     textarea.val(STUDIP.wtf.toMarkup(wtf));
                 }, 50);
             });
-            
+
             // Apply the library
             var editor = new wysihtml5.Editor(wtfid, {
                 toolbar: 'toolbar-' + wtfid,
